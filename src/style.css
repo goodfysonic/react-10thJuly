@@ -1,0 +1,93 @@
+
+/* Base styles for the whole page or application */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for the form and list */
+.container {
+    width: 100%;
+    margin: 30px auto;
+    background: white;
+    padding: 30px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    justify-content: center;
+}
+
+/* Styling the form elements */
+.input-group {
+    display: flex;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    padding-top: 5px;
+}
+
+label {
+    margin-bottom: 8px;
+    font-weight: bold;
+    margin: 1rem;
+}
+
+input[type="text"], .form-control {
+    padding: 8px;
+    border: 1px solid #bbb;
+    border-radius: 4px;
+    box-sizing: border-box;
+    flex: 1; 
+    font-size: 16px;
+    border-color: #007bff; 
+    height: 3rem;
+    
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Styling the list of users */
+ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li:last-child {
+    border-bottom: none;
+}
+
+.delete-button {
+    padding: 6px 12px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
