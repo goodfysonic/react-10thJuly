@@ -4,13 +4,10 @@ import { Modal, Button, Form, Input } from 'antd';
 const CustomModal = ({ isOpen, handleClose, onSubmit }) => {
     const [form] = Form.useForm();
 
-    const handleFormSubmit = () => {
-        form.validateFields().then(values => {
-            onSubmit(values);
-            form.resetFields();
-        }).catch(info => {
-            console.log('Validate Failed:', info);
-        });
+    const handleFormSubmit = (values) => {
+        onSubmit(values);
+        form.resetFields();
+        handleClose();
     };
 
     return (
