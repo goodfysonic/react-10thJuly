@@ -1,9 +1,11 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import NewUserForm from './NewUserForm';
+//import NewUserForm from './NewUserForm';
 import UserList from './UserList';
 import { getUsersRequest, createUserRequest, deleteUserRequest, usersError } from '../actions/users';
-import { Layout, Menu, Alert } from 'antd';
+import { Layout, Menu, Alert, Button } from 'antd';
+import useModal from '../hooks/useModal'; 
+import CustomModal from './CustomModal'; 
 
 const { Header, Content, Footer } = Layout;
 
@@ -11,12 +13,15 @@ const App = () => {
     const dispatch = useDispatch();
     const users = useSelector(state => state.users);
 
+    const [isModalOpen, openModal, closeModal] = useModal();
+
     useEffect(() => {
         dispatch(getUsersRequest());
     }, [dispatch]);
 
     const handleCreateUserSubmit = ({ firstName, lastName }) => {
         dispatch(createUserRequest({ firstName, lastName }));
+        closeModal();  
     };
 
     const handleDeleteUserClick = (userId) => {
@@ -48,7 +53,10 @@ const App = () => {
                             onClose={handleCloseAlert}
                         />
                     )}
-                    <NewUserForm onSubmit={handleCreateUserSubmit} />
+                    <Button type="primary" onClick={openModal}>
+                        Create User
+                    </Button>
+                    <CustomModal isOpen={isModalOpen} handleClose={closeModal} onSubmit={handleCreateUserSubmit} />
                     {!!users.items && !!users.items.length &&
                         <UserList onDeleteClick={handleDeleteUserClick} users={users.items} />
                     }
