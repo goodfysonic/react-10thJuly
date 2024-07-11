@@ -1,8 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Button, Form, Input } from 'antd';
 
-const CustomModal = ({ isOpen, handleClose, onSubmit }) => {
+const CustomModal = ({ isOpen, handleClose, onSubmit, initialValues }) => {
     const [form] = Form.useForm();
+
+    useEffect(() => {
+        if (initialValues) {
+            form.setFieldsValue(initialValues);
+        }
+    }, [initialValues, form]);
 
     const handleFormSubmit = (values) => {
         onSubmit(values);
@@ -19,6 +25,11 @@ const CustomModal = ({ isOpen, handleClose, onSubmit }) => {
                 <Form.Item name="lastName" label="Last Name" rules={[{ required: true, message: 'Please input the last name!' }]}>
                     <Input />
                 </Form.Item>
+                {initialValues && (
+                    <Form.Item name="id" label="ID" hidden>
+                        <Input />
+                    </Form.Item>
+                )}
                 <Form.Item>
                     <Button type="primary" htmlType="submit">
                         Submit
