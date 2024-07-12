@@ -1,10 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { deleteUserRequest } from '../actions/users';
 import { Table, Popconfirm, Button } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
+import { deleteUserRequest } from '../actions/users';
+import { connect } from 'react-redux';
 
-const UserList = ({ users, deleteUserRequest, onEditClick }) => {
+const UserList = ({ users, deleteUserRequest, onEditClick, pagination, loading, onChange }) => {
   const columns = [
     {
       title: 'First Name',
@@ -19,7 +19,7 @@ const UserList = ({ users, deleteUserRequest, onEditClick }) => {
     {
       title: 'Actions',
       key: 'actions',
-      align: 'right', // Align this column to the right
+      align: 'right',
       render: (text, record) => (
         <div>
           <Button
@@ -45,7 +45,17 @@ const UserList = ({ users, deleteUserRequest, onEditClick }) => {
     },
   ];
 
-  return <Table dataSource={users} columns={columns} rowKey="id" style={{ width: '100%' }} />;
+  return (
+    <Table
+      dataSource={users}
+      columns={columns}
+      rowKey="id"
+      pagination={pagination}
+      loading={loading}
+      onChange={onChange}
+      style={{ width: '100%' }}
+    />
+  );
 };
 
 const mapStateToProps = state => ({

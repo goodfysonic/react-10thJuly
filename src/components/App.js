@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import UserList from './UserList';
-import { getUsersRequest, createUserRequest, deleteUserRequest, updateUserRequest, usersError } from '../actions/users';
+import { createUserRequest, deleteUserRequest, updateUserRequest, usersError } from '../actions/users';
 import { Layout, Menu, Alert, Button, Row, Col } from 'antd';
 import useModal from '../hooks/useModal';
 import CustomModal from './CustomModal';
+import useListPage from '../hooks/useListPage';
 
 const { Header, Content, Footer } = Layout;
 
+const apiConfig = {
+  user: {
+    getlist: 'http://localhost:3001/users',
+  },
+};
+
 const App = () => {
     const dispatch = useDispatch();
-    const users = useSelector(state => state.users);
     const [editingUser, setEditingUser] = useState(null);
-
     const [isModalOpen, openModal, closeModal] = useModal();
 
-    useEffect(() => {
-        dispatch(getUsersRequest());
-    }, [dispatch]);
+    const { data: users, pagination, loading, error, handleTableChange } = useListPage(apiConfig.user);
 
     const handleCreateUserSubmit = ({ firstName, lastName }) => {
         dispatch(createUserRequest({ firstName, lastName }));
@@ -60,10 +63,10 @@ const App = () => {
                 <Row justify="center" style={{ marginTop: '20px' }}>
                     <Col span={20}>
                         <h2>Users</h2>
-                        {users.error && (
+                        {error && (
                             <Alert
                                 message="Error"
-                                description={users.error}
+                                description={error.message}
                                 type="error"
                                 showIcon
                                 closable
@@ -80,13 +83,14 @@ const App = () => {
                             onSubmit={editingUser ? handleEditUserSubmit : handleCreateUserSubmit}
                             initialValues={editingUser}
                         />
-                        {!!users.items && !!users.items.length &&
-                            <UserList 
-                                onDeleteClick={handleDeleteUserClick} 
-                                onEditClick={handleEditClick} 
-                                users={users.items} 
-                            />
-                        }
+                        <UserList 
+                            onDeleteClick={handleDeleteUserClick} 
+                            onEditClick={handleEditClick} 
+                            users={users} 
+                            pagination={pagination}
+                            loading={loading}
+                            onChange={handleTableChange}
+                        />
                     </Col>
                 </Row>
             </Content>
