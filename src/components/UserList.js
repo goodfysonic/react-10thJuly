@@ -19,12 +19,14 @@ const UserList = ({ users, deleteUserRequest, onEditClick }) => {
     {
       title: 'Actions',
       key: 'actions',
+      align: 'right', // Align this column to the right
       render: (text, record) => (
-        <>
+        <div>
           <Button
             type="primary"
             icon={<EditOutlined />}
             onClick={() => onEditClick(record)}
+            style={{ marginRight: '10px' }}
           >
             Edit
           </Button>
@@ -38,12 +40,12 @@ const UserList = ({ users, deleteUserRequest, onEditClick }) => {
               Delete
             </Button>
           </Popconfirm>
-        </>
+        </div>
       ),
     },
   ];
 
-  return <Table dataSource={users} columns={columns} rowKey="id" />;
+  return <Table dataSource={users} columns={columns} rowKey="id" style={{ width: '100%' }} />;
 };
 
 const mapStateToProps = state => ({
