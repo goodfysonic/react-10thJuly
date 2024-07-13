@@ -2,6 +2,7 @@ import { Types } from '../actions/users';
 
 const INITIAL_STATE = {
   items: [], 
+  error: null, 
 };
 
 function usersReducer(state = INITIAL_STATE, action) {
@@ -20,7 +21,17 @@ function usersReducer(state = INITIAL_STATE, action) {
       };
 
     case Types.USERS_ERROR:
-    return { ...state, error: action.payload.error };
+      return { ...state, error: action.payload.error };
+
+    case Types.UPDATE_USER_REQUEST:
+      return {
+        ...state,
+        items: state.items.map(user =>
+          user.id === action.payload.id
+            ? { ...user, ...action.payload }
+            : user
+        )
+      };
 
     default:
       return state;

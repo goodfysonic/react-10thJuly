@@ -1,35 +1,54 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-//import NewUserForm from './NewUserForm';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import UserList from './UserList';
-import { getUsersRequest, createUserRequest, deleteUserRequest, usersError } from '../actions/users';
-import { Layout, Menu, Alert, Button } from 'antd';
-import useModal from '../hooks/useModal'; 
-import CustomModal from './CustomModal'; 
+import { createUserRequest, deleteUserRequest, updateUserRequest, usersError } from '../actions/users';
+import { Layout, Menu, Alert, Button, Row, Col } from 'antd';
+import useModal from '../hooks/useModal';
+import CustomModal from './CustomModal';
+import useListPage from '../hooks/useListPage';
 
 const { Header, Content, Footer } = Layout;
 
+const apiConfig = {
+  user: {
+    getlist: 'http://localhost:3001/users',
+  },
+};
+
 const App = () => {
     const dispatch = useDispatch();
-    const users = useSelector(state => state.users);
-
+    const [editingUser, setEditingUser] = useState(null);
     const [isModalOpen, openModal, closeModal] = useModal();
 
-    useEffect(() => {
-        dispatch(getUsersRequest());
-    }, [dispatch]);
+    const { data: users, pagination, loading, error, handleTableChange } = useListPage(apiConfig.user);
 
     const handleCreateUserSubmit = ({ firstName, lastName }) => {
         dispatch(createUserRequest({ firstName, lastName }));
-        closeModal();  
+        closeModal();
+    };
+
+    const handleEditUserSubmit = ({ id, firstName, lastName }) => {
+        dispatch(updateUserRequest({ id, firstName, lastName }));
+        setEditingUser(null);
+        closeModal();
     };
 
     const handleDeleteUserClick = (userId) => {
         dispatch(deleteUserRequest(userId));
     };
 
+    const handleEditClick = (user) => {
+        setEditingUser(user);
+        openModal();
+    };
+
     const handleCloseAlert = () => {
         dispatch(usersError({ error: '' }));
+    };
+
+    const handleCloseModal = () => {
+        setEditingUser(null);
+        closeModal();
     };
 
     return (
@@ -41,26 +60,39 @@ const App = () => {
                 </Menu>
             </Header>
             <Content style={{ margin: '0 16px' }}>
-                <div style={{ padding: 24, minHeight: 360 }}>
-                    <h2>Users</h2>
-                    {users.error && (
-                        <Alert
-                            message="Error"
-                            description={users.error}
-                            type="error"
-                            showIcon
-                            closable
-                            onClose={handleCloseAlert}
+                <Row justify="center" style={{ marginTop: '20px' }}>
+                    <Col span={20}>
+                        <h2>Users</h2>
+                        {error && (
+                            <Alert
+                                message="Error"
+                                description={error.message}
+                                type="error"
+                                showIcon
+                                closable
+                                onClose={handleCloseAlert}
+                                style={{ marginBottom: '20px' }}
+                            />
+                        )}
+                        <Button type="primary" onClick={openModal} style={{ marginBottom: '20px' }}>
+                            Create User
+                        </Button>
+                        <CustomModal 
+                            isOpen={isModalOpen} 
+                            handleClose={handleCloseModal} 
+                            onSubmit={editingUser ? handleEditUserSubmit : handleCreateUserSubmit}
+                            initialValues={editingUser}
                         />
-                    )}
-                    <Button type="primary" onClick={openModal}>
-                        Create User
-                    </Button>
-                    <CustomModal isOpen={isModalOpen} handleClose={closeModal} onSubmit={handleCreateUserSubmit} />
-                    {!!users.items && !!users.items.length &&
-                        <UserList onDeleteClick={handleDeleteUserClick} users={users.items} />
-                    }
-                </div>
+                        <UserList 
+                            onDeleteClick={handleDeleteUserClick} 
+                            onEditClick={handleEditClick} 
+                            users={users} 
+                            pagination={pagination}
+                            loading={loading}
+                            onChange={handleTableChange}
+                        />
+                    </Col>
+                </Row>
             </Content>
             <Footer style={{ textAlign: 'center' }}>Tran Gia Huy with Love</Footer>
         </Layout>
