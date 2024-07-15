@@ -12,48 +12,45 @@ const UserList = ({
   loading,
   onChange,
 }) => {
-  const columns = React.useMemo(
-    () => [
-      {
-        title: 'First Name',
-        dataIndex: 'firstName',
-        key: 'firstName',
-      },
-      {
-        title: 'Last Name',
-        dataIndex: 'lastName',
-        key: 'lastName',
-      },
-      {
-        title: 'Actions',
-        key: 'actions',
-        align: 'right',
-        render: (text, record) => (
-          <div>
-            <Button
-              type="primary"
-              icon={<EditOutlined />}
-              onClick={() => onEditUser(record.id)} 
-              style={{ marginRight: '10px' }}
-            >
-              Edit
+  const columns = [
+    {
+      title: 'First Name',
+      dataIndex: 'firstName',
+      key: 'firstName',
+    },
+    {
+      title: 'Last Name',
+      dataIndex: 'lastName',
+      key: 'lastName',
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      align: 'right',
+      render: (text, record) => (
+        <div>
+          <Button
+            type="primary"
+            icon={<EditOutlined />}
+            onClick={() => onEditUser(record.id)}
+            style={{ marginRight: '10px' }}
+          >
+            Edit
+          </Button>
+          <Popconfirm
+            title="Are you sure you want to delete this user?"
+            onConfirm={() => deleteUserRequest(record.id)}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button type="primary" danger>
+              Delete
             </Button>
-            <Popconfirm
-              title="Are you sure you want to delete this user?"
-              onConfirm={() => deleteUserRequest(record.id)}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button type="primary" danger>
-                Delete
-              </Button>
-            </Popconfirm>
-          </div>
-        ),
-      },
-    ],
-    [deleteUserRequest, onEditUser]
-  );
+          </Popconfirm>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <Table

@@ -9,7 +9,10 @@ function usersReducer(state = INITIAL_STATE, action) {
   switch (action.type) {
     case Types.GET_USERS_SUCCESS:
       return { ...state, items: action.payload.items };
-
+     
+    case Types.FETCH_USER_SUCCESS:
+      return { ...state, user: action.payload };
+      
     case Types.CREATE_USER_REQUEST:
         const newUser = { ...action.payload, id: Math.random() };
         return { ...state, items: [newUser, ...state.items] };
@@ -32,7 +35,7 @@ function usersReducer(state = INITIAL_STATE, action) {
             : user
         )
       };
-
+    
     default:
       return state;
   }
