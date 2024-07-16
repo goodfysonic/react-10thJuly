@@ -7,8 +7,8 @@ const UserSavePage = () => {
 
   return (
     <div>
-      <h1>{id === 'create' ? '' : ''}</h1>
-      <NewUserForm />
+      <h1>{id ? '' : ''}</h1>
+      <NewUserForm userId={id} />
     </div>
   );
 };
