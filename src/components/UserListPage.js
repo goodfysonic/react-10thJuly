@@ -1,8 +1,8 @@
 import React from 'react';
-import { Table, Spin, Alert, Button, Popconfirm } from 'antd';
+import { Table, Alert, Button, Popconfirm } from 'antd';
 import useListPage from '../hooks/useListPage';
 
-const UserListPage = () => {
+const UserListPage = ({ onEditUser }) => {
     const apiConfig = {
         getlist: 'http://localhost:3001/api/users'
     };
@@ -12,32 +12,35 @@ const UserListPage = () => {
         pagination,
         loading,
         error,
-        editUser,
         deleteUser,
         setPagination
     } = useListPage(apiConfig);
 
-    const handleTableChange = (newPagination) => {
+    const handleTableChange = (pagination) => {
         setPagination({
             ...pagination,
-            current: newPagination.current,
-            pageSize: newPagination.pageSize
+            current: pagination.current,
+            pageSize: pagination.pageSize
         });
     };
 
     const columns = [
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
-            render: text => `${text.firstName} ${text.lastName}`
+            title: 'First Name',
+            dataIndex: 'firstName',
+            key: 'firstName',
+        },
+        {
+            title: 'Last Name',
+            dataIndex: 'lastName',
+            key: 'lastName',
         },
         {
             title: 'Actions',
             key: 'actions',
             render: (_, record) => (
                 <>
-                    <Button onClick={() => editUser(record.id, { firstName: 'Updated', lastName: 'Name' })} style={{ marginRight: 8 }}>Edit</Button>
+                    <Button onClick={() => onEditUser(record.id)} style={{ marginRight: 8 }}>Edit</Button>
                     <Popconfirm
                         title="Are you sure to delete this user?"
                         onConfirm={() => deleteUser(record.id)}
@@ -51,7 +54,6 @@ const UserListPage = () => {
         }
     ];
 
-    if (loading) return <Spin />;
     if (error) return <Alert message="Error" description={error.message} type="error" showIcon />;
 
     return (

@@ -17,23 +17,23 @@ const useListPage = (apiConfig, params = {}) => {
                     _limit: pagination.pageSize
                 },
             });
-            if (response.data && Array.isArray(response.data)) { 
-                setData(response.data);
+            if (response.data && Array.isArray(response.data.data)) {
+                setData(response.data.data);
                 setPagination(prev => ({
                     ...prev,
-                    total: parseInt(response.headers['x-total-count'], 10) || response.data.length 
+                    total: parseInt(response.headers['x-total-count'], 10) || response.data.total
                 }));
             } else {
                 throw new Error('Data is not an array');
             }
         } catch (err) {
             console.error('Fetch data error:', err);
-            setError(err);
+            setError(new Error('Data format is incorrect. Expected an array.'));
         } finally {
             setLoading(false);
         }
-    }, [apiConfig.getlist, params, pagination.current, pagination.pageSize]);
-    
+    }, [apiConfig.getlist, params, pagination]);
+
     useEffect(() => {
         fetchData();
     }, [fetchData]);

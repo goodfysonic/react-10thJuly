@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button, Row, Col } from 'antd';
-import UserListPage from './UserListPage';  // Đảm bảo rằng bạn import đúng component
+import UserListPage from './UserListPage';  
 
 const { Header, Content, Footer } = Layout;
 

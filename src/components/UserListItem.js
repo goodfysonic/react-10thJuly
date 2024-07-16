@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Button, Popconfirm } from 'antd';
+import { Card, Button } from 'antd';
 import { useDispatch } from 'react-redux';
 import { deleteUserRequest } from '../actions/users';
 
@@ -19,16 +19,9 @@ const UserListItem = ({ user, onEditUser }) => {
         <Button type="primary" onClick={() => onEditUser(user.id)} style={{ marginRight: '10px' }}>
           Edit
         </Button>
-        <Popconfirm
-          title="Are you sure you want to delete this user?"
-          onConfirm={handleDelete}
-          okText="Yes"
-          cancelText="No"
-        >
-          <Button type="primary" danger>
-            Delete
-          </Button>
-        </Popconfirm>
+        <Button type="primary" danger onClick={handleDelete}>
+          Delete
+        </Button>
       </div>
     </Card>
   );
