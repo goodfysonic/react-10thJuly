@@ -1,4 +1,3 @@
-
 import App from './components/App';
 import UserSavePage from './components/UserSavePage';
 
@@ -8,11 +7,7 @@ const routesConfig = [
     element: <App />
   },
   {
-    path: '/user/create',
-    element: <UserSavePage />
-  },
-  {
-    path: '/user/:id',
+    path: '/user/:id?',
     element: <UserSavePage />
   }
 ];
