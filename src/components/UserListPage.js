@@ -1,43 +1,75 @@
-import React, { useEffect } from 'react';
-import { Table, Spin, Alert, Card } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUsersRequest } from '../actions/users';
-import UserListItem from './UserListItem';
+import React from 'react';
+import { Table, Spin, Alert, Button, Popconfirm } from 'antd';
+import useListPage from '../hooks/useListPage';
 
-const UserListPage = ({ onEditUser }) => {
-  const dispatch = useDispatch();
-  const { items, loading, error } = useSelector(state => state.users);
+const UserListPage = () => {
+    const apiConfig = {
+        getlist: 'http://localhost:3001/api/users'
+    };
 
-  useEffect(() => {
-    dispatch(getUsersRequest());
-  }, [dispatch]);
+    const {
+        data: users,
+        pagination,
+        loading,
+        error,
+        editUser,
+        deleteUser,
+        setPagination
+    } = useListPage(apiConfig);
 
-  const columns = [
-    {
-      title: 'User',
-      key: 'user',
-      render: (text, record) => <UserListItem user={record} onEditUser={onEditUser} />
-    }
-  ];
+    const handleTableChange = (newPagination) => {
+        setPagination({
+            ...pagination,
+            current: newPagination.current,
+            pageSize: newPagination.pageSize
+        });
+    };
 
-  if (loading) {
-    return <Spin />;
-  }
+    const columns = [
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            key: 'name',
+            render: text => `${text.firstName} ${text.lastName}`
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            render: (_, record) => (
+                <>
+                    <Button onClick={() => editUser(record.id, { firstName: 'Updated', lastName: 'Name' })} style={{ marginRight: 8 }}>Edit</Button>
+                    <Popconfirm
+                        title="Are you sure to delete this user?"
+                        onConfirm={() => deleteUser(record.id)}
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <Button type="danger">Delete</Button>
+                    </Popconfirm>
+                </>
+            )
+        }
+    ];
 
-  if (error) {
-    return <Alert message="Error" description={error.message} type="error" showIcon />;
-  }
+    if (loading) return <Spin />;
+    if (error) return <Alert message="Error" description={error.message} type="error" showIcon />;
 
-  return (
-    <Card title="Users" bordered={false} style={{ marginTop: '20px' }}>
-      <Table
-        columns={columns}
-        dataSource={items}
-        pagination={false}
-        rowKey="id"
-      />
-    </Card>
-  );
+    return (
+        <div>
+            <h1>Users</h1>
+            <Table
+                columns={columns}
+                dataSource={users}
+                rowKey="id"
+                pagination={{
+                    current: pagination.current,
+                    pageSize: pagination.pageSize,
+                    total: pagination.total,
+                    onChange: handleTableChange
+                }}
+            />
+        </div>
+    );
 };
 
 export default UserListPage;

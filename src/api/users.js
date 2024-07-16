@@ -32,5 +32,4 @@ export const fetchUser = (userId) => {
       .catch(error => {
         throw error;
       });
-  };
-  
+};
