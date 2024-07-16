@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Menu, Button, Row, Col } from 'antd';
-import UserList from './UserList';
+import UserListPage from './UserListPage';  // Đảm bảo rằng bạn import đúng component
 
 const { Header, Content, Footer } = Layout;
 
@@ -35,7 +35,7 @@ const App = () => {
             <Button type="primary" onClick={handleCreateClick} style={{ marginBottom: '20px' }}>
               Create User
             </Button>
-            <UserList onEditUser={handleEditUser} />
+            <UserListPage onEditUser={handleEditUser} />
           </Col>
         </Row>
       </Content>

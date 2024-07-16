@@ -4,7 +4,9 @@ export const Types = {
     DELETE_USER_REQUEST: 'users/delete_user_request',
     CREATE_USER_REQUEST: 'users/create_user_request',
     USERS_ERROR: 'users/user_error',
-    UPDATE_USER_REQUEST: 'users/update_user_request'  
+    UPDATE_USER_REQUEST: 'users/update_user_request',
+    FETCH_USER_REQUEST: 'users/fetch_user_request',
+    FETCH_USER_SUCCESS: 'users/fetch_user_success'
 };
 
 export const getUsersRequest = () => ({
@@ -48,3 +50,14 @@ export const updateUserRequest = ({ id, firstName, lastName }) => ({
         lastName
     }
 });
+
+export const fetchUserRequest = (userId) => ({
+    type: Types.FETCH_USER_REQUEST,
+    payload: userId
+  });
+  
+  export const fetchUserSuccess = (user) => ({
+    type: Types.FETCH_USER_SUCCESS,
+    payload: user
+  });
+  
