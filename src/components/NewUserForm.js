@@ -1,11 +1,10 @@
-
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, Spin, Alert } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { createUserRequest, updateUserRequest, fetchUserRequest } from '../actions/users';
 
-const NewUserForm = ({ users, createUserRequest, updateUserRequest, fetchUserRequest, user }) => {
+const NewUserForm = ({ users, createUserRequest, updateUserRequest, fetchUserRequest, user, loading, error }) => {
   const [isEditing, setIsEditing] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -13,42 +12,36 @@ const NewUserForm = ({ users, createUserRequest, updateUserRequest, fetchUserReq
 
   useEffect(() => {
     if (id && id !== 'create') {
-      const existingUser = users.find((user) => user.id === parseInt(id, 10));
-      if (existingUser) {
-        form.setFieldsValue(existingUser);
-        setIsEditing(true);
-      } else {
-        fetchUserRequest(id);
-        setIsEditing(true);
-      }
+      fetchUserRequest(id);
+      setIsEditing(true);
     } else {
       form.resetFields();
       setIsEditing(false);
     }
-  }, [id, users, fetchUserRequest, form]);
+  }, [id, fetchUserRequest, form]);
 
   useEffect(() => {
-    if (user && isEditing && !form.getFieldValue('firstName')) {
+    if (user && isEditing) {
       form.setFieldsValue(user);
     }
   }, [user, isEditing, form]);
 
-  const handleSubmit = (values) => {
-    if (isEditing) {
-      updateUserRequest({
-        id: parseInt(id, 10),
-        ...values,
-      });
-    } else {
-      createUserRequest(values);
+  const handleSubmit = async (values) => {
+    const action = isEditing ? updateUserRequest : createUserRequest;
+    await action({ ...values, id: parseInt(id, 10) });
+    if (!error) {
+      navigate('/users');
     }
-    form.resetFields();
-    navigate('/');
   };
+
+  if (loading) {
+    return <Spin size="large" />;
+  }
 
   return (
     <div className="container">
       <h1>{id === 'create' ? 'Create User' : 'Edit User'}</h1>
+      {error && <Alert type="error" message={error} />}
       <Form form={form} onFinish={handleSubmit} layout="vertical">
         <Form.Item
           label="First Name"
@@ -77,6 +70,8 @@ const NewUserForm = ({ users, createUserRequest, updateUserRequest, fetchUserReq
 const mapStateToProps = (state) => ({
   users: state.users.items,
   user: state.users.user,
+  loading: state.loading,
+  error: state.error
 });
 
 const mapDispatchToProps = {

@@ -10,10 +10,9 @@ const UserListPage = ({ onEditUser }) => {
     const {
         data: users,
         pagination,
-        loading,
         error,
         deleteUser,
-        setPagination
+        setPagination,
     } = useListPage(apiConfig);
 
     const handleTableChange = (pagination) => {
@@ -22,6 +21,10 @@ const UserListPage = ({ onEditUser }) => {
             current: pagination.current,
             pageSize: pagination.pageSize
         });
+    };
+
+    const handleDeleteUser = (id) => {
+        deleteUser(id);
     };
 
     const columns = [
@@ -43,7 +46,7 @@ const UserListPage = ({ onEditUser }) => {
                     <Button onClick={() => onEditUser(record.id)} style={{ marginRight: 8 }}>Edit</Button>
                     <Popconfirm
                         title="Are you sure to delete this user?"
-                        onConfirm={() => deleteUser(record.id)}
+                        onConfirm={() => handleDeleteUser(record.id)}
                         okText="Yes"
                         cancelText="No"
                     >
@@ -54,7 +57,9 @@ const UserListPage = ({ onEditUser }) => {
         }
     ];
 
-    if (error) return <Alert message="Error" description={error.message} type="error" showIcon />;
+    if (error) {
+        return <Alert message="Error loading users" description={error.message} type="error" showIcon />;
+    }
 
     return (
         <div>
