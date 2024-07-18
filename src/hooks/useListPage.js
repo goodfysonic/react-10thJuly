@@ -1,10 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const useListPage = (apiConfig, params = {}) => {
     const [data, setData] = useState([]);
     const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 });
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     const fetchData = useCallback(async () => {
         try {
@@ -12,7 +14,7 @@ const useListPage = (apiConfig, params = {}) => {
                 params: {
                     ...params,
                     _page: pagination.current,
-                    _limit: pagination.pageSize
+                    _limit: pagination.pageSize,
                 },
             });
             if (response.data && Array.isArray(response.data.data)) {
@@ -26,20 +28,19 @@ const useListPage = (apiConfig, params = {}) => {
             }
         } catch (err) {
             console.error('Fetch data error:', err);
-            setError(err);  
+            setError(err);
         }
     }, [apiConfig.getlist, params, pagination]);
 
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
+    const handleCreateUser = () => {
+        navigate('/user/create');
+    };
 
-    const editUser = async (userId, userData) => {
-        try {
-            await axios.put(`${apiConfig.getlist}/${userId}`, userData);
-            fetchData();  // Refresh data after update
-        } catch (err) {
-            setError(err);
+    const handleEditUser = (userId) => {
+        if (Number.isInteger(userId)) {
+            navigate(`/user/${userId}`);
+        } else {
+            console.error('User ID is not an integer:', userId);
         }
     };
 
@@ -52,11 +53,16 @@ const useListPage = (apiConfig, params = {}) => {
         }
     };
 
+    useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
     return {
         data,
         pagination,
         error,
-        editUser,
+        handleCreateUser,
+        handleEditUser,
         deleteUser,
         setPagination,
         fetchData,

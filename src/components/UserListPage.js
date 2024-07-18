@@ -2,18 +2,16 @@ import React from 'react';
 import { Table, Alert, Button, Popconfirm } from 'antd';
 import useListPage from '../hooks/useListPage';
 
-const UserListPage = ({ onEditUser }) => {
-    const apiConfig = {
-        getlist: 'http://localhost:3001/api/users'
-    };
-
+const UserListPage = () => {
     const {
         data: users,
         pagination,
         error,
         deleteUser,
+        handleCreateUser,
+        handleEditUser,
         setPagination,
-    } = useListPage(apiConfig);
+    } = useListPage({ getlist: 'http://localhost:3001/api/users' });
 
     const handleTableChange = (pagination) => {
         setPagination({
@@ -28,28 +26,15 @@ const UserListPage = ({ onEditUser }) => {
     };
 
     const columns = [
+        { title: 'First Name', dataIndex: 'firstName', key: 'firstName' },
+        { title: 'Last Name', dataIndex: 'lastName', key: 'lastName' },
         {
-            title: 'First Name',
-            dataIndex: 'firstName',
-            key: 'firstName',
-        },
-        {
-            title: 'Last Name',
-            dataIndex: 'lastName',
-            key: 'lastName',
-        },
-        {
-            title: 'Actions',
-            key: 'actions',
-            render: (_, record) => (
+            title: 'Actions', key: 'actions', render: (_, record) => (
                 <>
-                    <Button onClick={() => onEditUser(record.id)} style={{ marginRight: 8 }}>Edit</Button>
-                    <Popconfirm
-                        title="Are you sure to delete this user?"
-                        onConfirm={() => handleDeleteUser(record.id)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
+                    <Button onClick={() => handleEditUser(record.id)} style={{ marginRight: 8 }}>Edit</Button>
+                    <Popconfirm 
+                        title="Are you sure to delete this user?" 
+                        onConfirm={() => handleDeleteUser(record.id)} okText="Yes" cancelText="No">
                         <Button type="danger">Delete</Button>
                     </Popconfirm>
                 </>
@@ -63,6 +48,9 @@ const UserListPage = ({ onEditUser }) => {
 
     return (
         <div>
+            <Button type="primary" onClick={handleCreateUser} style={{ marginBottom: '20px' }}>
+              Create User
+            </Button>
             <h1>Users</h1>
             <Table
                 columns={columns}
