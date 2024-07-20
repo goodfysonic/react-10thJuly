@@ -7,11 +7,11 @@ const UserListPage = () => {
         data: users,
         pagination,
         error,
-        deleteUser,
+        handleDeleteUser,
         handleCreateUser,
         handleEditUser,
         setPagination,
-    } = useListPage({ getlist: 'http://localhost:3001/api/users' });
+    } = useListPage();
 
     const handleTableChange = (pagination) => {
         setPagination({
@@ -19,10 +19,6 @@ const UserListPage = () => {
             current: pagination.current,
             pageSize: pagination.pageSize
         });
-    };
-
-    const handleDeleteUser = (id) => {
-        deleteUser(id);
     };
 
     const columns = [

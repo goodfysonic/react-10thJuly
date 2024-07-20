@@ -1,17 +1,19 @@
-import App from './components/App';
+import UserListPage from './components/UserListPage';
 import UserSavePage from './components/UserSavePage';
-import UserListPage from './components/UserListPage'; 
 
 const routesConfig = [
-
   {
-    path: '/user/:id?',
-    element: <UserSavePage />
+    path: '/',
+    element: <UserListPage />,
   },
   {
-    path: '/users',
-    element: <UserListPage /> 
-  }
+    path: '/user/create',
+    element: <UserSavePage />,
+  },
+  {
+    path: '/user/:id',
+    element: <UserSavePage />,
+  },
 ];
 
 export default routesConfig;

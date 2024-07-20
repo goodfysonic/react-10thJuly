@@ -1,6 +1,6 @@
 import React from 'react';
 import { Layout, Menu, Row, Col } from 'antd';
-import UserListPage from './UserListPage';
+import AppRoutes from './routes';  
 
 const { Header, Content, Footer } = Layout;
 
@@ -16,7 +16,7 @@ const App = () => {
       <Content style={{ margin: '0 16px' }}>
         <Row justify="center" style={{ marginTop: '20px' }}>
           <Col span={20}>
-            <UserListPage />
+            <AppRoutes />
           </Col>
         </Row>
       </Content>
